@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Verification</title>
+  
+
+  
+  <style>
+    body {
+      background-color: #0c0f12; /* Deep cinematic dark charcoal */
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-box {
+      background-color: #13191f;
+      padding: 40px 30px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 320px;
+    }
+
+    h2 {
+      color: #fbbf24; /* Premium Amber Gold Accent */
+      margin: 0 0 8px 0;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    p {
+      color: #64748b;
+      font-size: 13px;
+      margin: 0 0 24px 0;
+    }
+
+    input {
+      background: #0c0f12;
+      border: 1px solid #334155;
+      color: white;
+      padding: 12px;
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      text-align: center;
+      font-size: 16px;
+      box-sizing: border-box;
+      letter-spacing: 4px; /* Spaces out your dots for passwords nicely */
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      border-color: #fbbf24;
+      outline: none;
+    }
+
+    button {
+      background: #fbbf24;
+      color: #0c0f12;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .error-msg {
+      color: #f87171;
+      font-size: 12px;
+      margin-top: 14px;
+      font-weight: 500;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <h2>Admin Gateway</h2>
+    <p>Secure system authentication required</p>
+    
+    <input type="password" id="admin-pass" placeholder="••••" onkeypress="handleKeyPress(event)">
+    <button onclick="checkPassword()">Verify Credentials</button>
+    
+    <div id="error-zone" class="error-msg">❌ Access Denied. Invalid Passcode.</div>
+  </div>
+
+  <script>
+    function checkPassword() {
+      const input = document.getElementById('admin-pass').value;
+      const errorZone = document.getElementById('error-zone');
+      
+      // Verified simple gate check matches string value
+      if (input === '1234') { 
+        errorZone.style.display = 'none';
+        // Success! Forwards you instantly to your main panel file page
+        window.location.href = 'admin.html'; 
+      } else {
+        errorZone.style.display = 'block';
+        document.getElementById('admin-pass').value = ''; // Clears input box automatically
+      }
+    }
+
+    // Listens for 'Enter' click on your computer keyboard to trigger verify
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        checkPassword();
+      }
+    }
+  </script>
+
+</body>
+</html>

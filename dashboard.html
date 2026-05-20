@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verdiq Dashboard</title>
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #07120d;
+      color: white;
+    }
+
+    .dashboard {
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: #0d1e17;
+      padding: 20px;
+      position: fixed;
+    }
+
+    .sidebar h2 {
+      color: #8cffb0;
+      margin-bottom: 20px;
+    }
+
+    .sidebar p {
+      margin: 8px 0;
+      color: #cfe7d8;
+    }
+
+    .sidebar button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background: #8cffb0;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 30px;
+      width: 100%;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.06);
+      padding: 20px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+    }
+
+    .card h3 {
+      color: #8cffb0;
+    }
+
+    .big-number {
+      font-size: 32px;
+      margin-top: 10px;
+    }
+
+    .actions {
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 18px;
+      background: #8cffb0;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+
+    .danger {
+      background: #ff5c5c;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<!-- TOP RIGHT CORNER NAVIGATION -->
+<div class="top-nav-container">
+  <!-- Small live clock indicator -->
+  <span id="nav-clock" class="nav-clock-text">--:--:--</span>
+
+  <!-- Clickable User Profile Avatar Link -->
+  <div class="profile-trigger-zone" onclick="toggleProfileModal()">
+    <div class="user-avatar-circle">
+      <i class="fas fa-user"></i> <!-- Standard FontAwesome Icon -->
+    </div>
+    <span id="nav-user-name" class="nav-username-label">Loading...</span>
+  </div>
+</div>
+
+<!-- DARK GRAPHICAL USER MODAL OVERLAY -->
+<div id="profile-modal-overlay" class="profile-overlay-bg" onclick="toggleProfileModal()">
+  <!-- Modal Card Content Box (Stops click propagation so it doesn't close itself) -->
+  <div class="profile-modal-card" onclick="event.stopPropagation()">
+    <button class="close-modal-btn" onclick="toggleProfileModal()">&times;</button>
+    
+    <div class="modal-profile-header">
+      <div class="large-avatar-circle"><i class="fas fa-user-shield"></i></div>
+      <h3 id="modal-display-name">User Account Profile</h3>
+      <p id="modal-display-email" class="modal-subtitle">email@address.com</p>
+    </div>
+
+    <div class="modal-info-grid">
+      <div class="info-field-item">
+        <label>Full Legal Name</label>
+        <p id="info-profile-name">---</p>
+      </div>
+      <div class="info-field-item">
+        <label>QID / Identity Number</label>
+        <p id="info-profile-qid">---</p>
+      </div>
+      <div class="info-field-item">
+        <label>Mobile Number</label>
+        <p id="info-profile-phone">---</p>
+      </div>
+      <div class="info-field-item">
+        <label>Date of Birth</label>
+        <p id="info-profile-dob">---</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <h2>Verdiq 🌱</h2>
+
+    <p id="user-name">Loading...</p>
+    <p id="user-email">Loading...</p>
+
+    <hr style="opacity:0.2; margin:15px 0;">
+
+    <p>💳 Wallet</p>
+    <p id="credits">Credits: 0</p>
+
+    <p>🌍 CO₂ Saved</p>
+    <p id="co2">0 kg</p>
+
+    <button onclick="logout()">Logout</button>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="content">
+
+    <div class="topbar">
+      <h1>Dashboard</h1>
+    </div>
+
+    <div class="grid">
+
+      <div class="card">
+        <h3>Total Credits</h3>
+        <div class="big-number" id="main-credits">0 CC</div>
+      </div>
+
+      <div class="card">
+        <h3>CO₂ Impact</h3>
+        <div class="big-number" id="main-co2">0 kg</div>
+      </div>
+
+      <div class="card">
+        <h3>Wallet Value</h3>
+        <div class="big-number" id="wallet-value">0 QAR</div>
+        <p style="opacity:0.7;">100 CC = 1 QAR</p>
+      </div>
+
+      <div class="card">
+        <h3>Activity</h3>
+        <p>Recycle, travel green, save energy → earn credits</p>
+      </div>
+
+      <div class="card">
+        <h3>📊 Eco Progress</h3>
+        <canvas id="ecoChart"></canvas>
+      </div>
+
+      <button class="reward-btn" onclick="window.location.href='rewards.html'">
+        🛍 Rewards Store
+      </button>
+
+    </div>
+
+    <div class="actions">
+
+      <h2>Earn Carbon Credits</h2>
+
+      <button class="btn" onclick="addCredits(10, 'transport')">🚆 Public Transport (+10)</button>
+      <button class="btn" onclick="addCredits(20, 'recycling')">♻ Recycling (+20)</button>
+      <button class="btn" onclick="addCredits(15, 'walking')">🚶 Walking / Cycling (+15)</button>
+      <button class="btn" onclick="addCredits(25, 'energy')">⚡ Saved Electricity (+25)</button>
+      <button class="btn" onclick="addCredits(30, 'purchase')">🌱 Eco Purchase (+30)</button>
+
+      <button class="upload-btn" onclick="window.location.href='recycling.html'">
+        ♻ Submit Recycling Proof
+      </button>
+
+      <button class="btn danger" onclick="addCredits(-10, 'penalty')">
+        ❌ Carbon Penalty (-10)
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<!-- SUPABASE (Added missing CDN library here) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- APPLICATION SCRIPT -->
+<script src="js/app.js"></script>
+
+<!-- Update your dashboard button to hit the entry login page -->
+<button id="ghost-admin-zone" onclick="window.location.href='admin-login.html'">
+  <span class="lock-icon">🔒</span> Admin
+</button>
+
+</body>
+</html>
